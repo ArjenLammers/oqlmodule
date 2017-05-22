@@ -11,10 +11,8 @@ package oql.actions;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.Map.Entry;
 import com.mendix.core.Core;
-import com.mendix.core.objectmanagement.member.MendixObjectReference;
 import com.mendix.logging.ILogNode;
 import com.mendix.systemwideinterfaces.connectionbus.data.IDataColumnSchema;
 import com.mendix.systemwideinterfaces.connectionbus.data.IDataRow;
@@ -25,12 +23,10 @@ import com.mendix.systemwideinterfaces.connectionbus.requests.IRetrievalSchema;
 import com.mendix.systemwideinterfaces.connectionbus.requests.types.IOQLTextGetRequest;
 import com.mendix.systemwideinterfaces.core.IContext;
 import com.mendix.systemwideinterfaces.core.IMendixIdentifier;
-import com.mendix.webui.CustomJavaAction;
-import oql.proxies.Parameter;
 import com.mendix.systemwideinterfaces.core.IMendixObject;
-import com.mendix.systemwideinterfaces.core.IMendixObjectMember;
 import com.mendix.systemwideinterfaces.core.meta.IMetaAssociation;
-import com.mendix.systemwideinterfaces.core.meta.IMetaObject;
+import com.mendix.webui.CustomJavaAction;
+import oql.implementation.OQL;
 
 /**
  * This action executes a given OQL statement and accepts parameters.
@@ -73,17 +69,14 @@ public class ExecuteOQLStatement extends CustomJavaAction<java.util.List<IMendix
 {
 	private String statement;
 	private String returnEntity;
-	private java.util.List<IMendixObject> __parameters;
-	private java.util.List<oql.proxies.Parameter> parameters;
 	private Long amount;
 	private Long offset;
 
-	public ExecuteOQLStatement(IContext context, String statement, String returnEntity, java.util.List<IMendixObject> parameters, Long amount, Long offset)
+	public ExecuteOQLStatement(IContext context, String statement, String returnEntity, Long amount, Long offset)
 	{
 		super(context);
 		this.statement = statement;
 		this.returnEntity = returnEntity;
-		this.__parameters = parameters;
 		this.amount = amount;
 		this.offset = offset;
 	}
@@ -91,11 +84,6 @@ public class ExecuteOQLStatement extends CustomJavaAction<java.util.List<IMendix
 	@Override
 	public java.util.List<IMendixObject> executeAction() throws Exception
 	{
-		this.parameters = new java.util.ArrayList<oql.proxies.Parameter>();
-		if (__parameters != null)
-			for (IMendixObject __parametersElement : __parameters)
-				this.parameters.add(oql.proxies.Parameter.initialize(getContext(), __parametersElement));
-
 		// BEGIN USER CODE
 		IContext context = getContext().createSudoClone();
 		ILogNode logger = Core.getLogger(this.getClass().getSimpleName());
@@ -110,40 +98,12 @@ public class ExecuteOQLStatement extends CustomJavaAction<java.util.List<IMendix
 		
 		logger.debug("Mapping parameters.");
 		
-		if (this.parameters != null) {
 			
-			for (Parameter parameter : this.parameters) {
-				if (parameter.getParameterType() == null)
-					throw new Exception("No type set for parameter " + parameter.getParameterName());
-				
-				switch (parameter.getParameterType()) {
-				case _Boolean:
-					parameterMap.put(parameter.getParameterName(), parameter.getBooleanValue());
-					break;
-				case _Long:
-					parameterMap.put(parameter.getParameterName(), parameter.getLongValue());
-					break;
-				case _Float:
-					parameterMap.put(parameter.getParameterName(), parameter.getFloatValue());
-					break;
-				case DateTime:
-					parameterMap.put(parameter.getParameterName(), parameter.getDateTimeValue());
-					break;
-				case Integer:
-					parameterMap.put(parameter.getParameterName(), parameter.getIntegerValue());
-					break;
-				case Decimal:
-					parameterMap.put(parameter.getParameterName(), parameter.getDecimalValue());
-					break;
-				case String:
-					parameterMap.put(parameter.getParameterName(), parameter.getStringValue());
-					break;
-				default:
-					throw new Exception("No valid type set for parameter " + parameter.getParameterName());
-				}
-			}
-			request.setParameters(parameterMap);
+		for (Entry<String, Object> entry : OQL.getNextParameters().entrySet()) {
+			parameterMap.put(entry.getKey(), entry.getValue());
 		}
+		request.setParameters(parameterMap);
+		OQL.reset();
 		
 		List<IMendixObject> result = new LinkedList<IMendixObject>();
 		logger.debug("Executing query");

@@ -38,6 +38,12 @@ public class UserActionsRegistrar implements EventHandler
 		{
 			component = mxRuntime.getMainComponent();
 			Core.initialize(component, integration);   
+			component.actionRegistry().registerUserAction(oql.actions.AddBooleanParameter.class);
+			component.actionRegistry().registerUserAction(oql.actions.AddDateTimeParameter.class);
+			component.actionRegistry().registerUserAction(oql.actions.AddDecimalParameter.class);
+			component.actionRegistry().registerUserAction(oql.actions.AddFloatValue.class);
+			component.actionRegistry().registerUserAction(oql.actions.AddIntegerLongValue.class);
+			component.actionRegistry().registerUserAction(oql.actions.AddStringParameter.class);
 			component.actionRegistry().registerUserAction(oql.actions.ExecuteOQLStatement.class);
 			component.actionRegistry().registerUserAction(system.actions.VerifyPassword.class);
 		}
