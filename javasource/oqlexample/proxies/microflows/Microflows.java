@@ -2,7 +2,7 @@
 //
 // WARNING: Code you write here will be lost the next time you deploy the project.
 
-package oql.proxies.microflows;
+package oqlexample.proxies.microflows;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,19 +14,19 @@ import com.mendix.systemwideinterfaces.core.IMendixObject;
 
 public class Microflows
 {
-	// These are the microflows for the OQL module
-	public static java.util.List<oql.proxies.ExamplePersonResult> dS_ExampleOQL(IContext context)
+	// These are the microflows for the OQLExample module
+	public static java.util.List<oqlexample.proxies.ExamplePersonResult> dS_ExampleOQL(IContext context)
 	{
 		try
 		{
 			Map<String, Object> params = new HashMap<String, Object>();
-			java.util.List<IMendixObject> objs = Core.execute(context, "OQL.DS_ExampleOQL", params);
-			java.util.List<oql.proxies.ExamplePersonResult> result = null;
+			java.util.List<IMendixObject> objs = Core.execute(context, "OQLExample.DS_ExampleOQL", params);
+			java.util.List<oqlexample.proxies.ExamplePersonResult> result = null;
 			if (objs != null)
 			{
-				result = new java.util.ArrayList<oql.proxies.ExamplePersonResult>();
+				result = new java.util.ArrayList<oqlexample.proxies.ExamplePersonResult>();
 				for (IMendixObject obj : objs)
-					result.add(oql.proxies.ExamplePersonResult.initialize(context, obj));
+					result.add(oqlexample.proxies.ExamplePersonResult.initialize(context, obj));
 			}
 			return result;
 		}
@@ -40,7 +40,7 @@ public class Microflows
 		try
 		{
 			Map<String, Object> params = new HashMap<String, Object>();
-			Core.execute(context, "OQL.IVK_CreateContent", params);
+			Core.execute(context, "OQLExample.IVK_CreateContent", params);
 		}
 		catch (CoreException e)
 		{
@@ -52,7 +52,7 @@ public class Microflows
 		try
 		{
 			Map<String, Object> params = new HashMap<String, Object>();
-			Core.execute(context, "OQL.IVK_PerformTests", params);
+			Core.execute(context, "OQLExample.IVK_PerformTests", params);
 		}
 		catch (CoreException e)
 		{

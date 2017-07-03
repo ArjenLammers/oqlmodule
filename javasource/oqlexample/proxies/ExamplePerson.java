@@ -2,7 +2,7 @@
 //
 // WARNING: Code you write here will be lost the next time you deploy the project.
 
-package oql.proxies;
+package oqlexample.proxies;
 
 public class ExamplePerson
 {
@@ -13,7 +13,7 @@ public class ExamplePerson
 	/**
 	 * Internal name of this entity
 	 */
-	public static final java.lang.String entityName = "OQL.ExamplePerson";
+	public static final java.lang.String entityName = "OQLExample.ExamplePerson";
 
 	/**
 	 * Enum describing members of this entity
@@ -46,15 +46,15 @@ public class ExamplePerson
 
 	public ExamplePerson(com.mendix.systemwideinterfaces.core.IContext context)
 	{
-		this(context, com.mendix.core.Core.instantiate(context, "OQL.ExamplePerson"));
+		this(context, com.mendix.core.Core.instantiate(context, "OQLExample.ExamplePerson"));
 	}
 
 	protected ExamplePerson(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject examplePersonMendixObject)
 	{
 		if (examplePersonMendixObject == null)
 			throw new java.lang.IllegalArgumentException("The given object cannot be null.");
-		if (!com.mendix.core.Core.isSubClassOf("OQL.ExamplePerson", examplePersonMendixObject.getType()))
-			throw new java.lang.IllegalArgumentException("The given object is not a OQL.ExamplePerson");
+		if (!com.mendix.core.Core.isSubClassOf("OQLExample.ExamplePerson", examplePersonMendixObject.getType()))
+			throw new java.lang.IllegalArgumentException("The given object is not a OQLExample.ExamplePerson");
 
 		this.examplePersonMendixObject = examplePersonMendixObject;
 		this.context = context;
@@ -64,31 +64,31 @@ public class ExamplePerson
 	 * @deprecated Use 'ExamplePerson.load(IContext, IMendixIdentifier)' instead.
 	 */
 	@Deprecated
-	public static oql.proxies.ExamplePerson initialize(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixIdentifier mendixIdentifier) throws com.mendix.core.CoreException
+	public static oqlexample.proxies.ExamplePerson initialize(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixIdentifier mendixIdentifier) throws com.mendix.core.CoreException
 	{
-		return oql.proxies.ExamplePerson.load(context, mendixIdentifier);
+		return oqlexample.proxies.ExamplePerson.load(context, mendixIdentifier);
 	}
 
 	/**
 	 * Initialize a proxy using context (recommended). This context will be used for security checking when the get- and set-methods without context parameters are called.
 	 * The get- and set-methods with context parameter should be used when for instance sudo access is necessary (IContext.getSudoContext() can be used to obtain sudo access).
 	 */
-	public static oql.proxies.ExamplePerson initialize(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject mendixObject)
+	public static oqlexample.proxies.ExamplePerson initialize(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject mendixObject)
 	{
-		return new oql.proxies.ExamplePerson(context, mendixObject);
+		return new oqlexample.proxies.ExamplePerson(context, mendixObject);
 	}
 
-	public static oql.proxies.ExamplePerson load(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixIdentifier mendixIdentifier) throws com.mendix.core.CoreException
+	public static oqlexample.proxies.ExamplePerson load(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixIdentifier mendixIdentifier) throws com.mendix.core.CoreException
 	{
 		com.mendix.systemwideinterfaces.core.IMendixObject mendixObject = com.mendix.core.Core.retrieveId(context, mendixIdentifier);
-		return oql.proxies.ExamplePerson.initialize(context, mendixObject);
+		return oqlexample.proxies.ExamplePerson.initialize(context, mendixObject);
 	}
 
-	public static java.util.List<oql.proxies.ExamplePerson> load(com.mendix.systemwideinterfaces.core.IContext context, java.lang.String xpathConstraint) throws com.mendix.core.CoreException
+	public static java.util.List<oqlexample.proxies.ExamplePerson> load(com.mendix.systemwideinterfaces.core.IContext context, java.lang.String xpathConstraint) throws com.mendix.core.CoreException
 	{
-		java.util.List<oql.proxies.ExamplePerson> result = new java.util.ArrayList<oql.proxies.ExamplePerson>();
-		for (com.mendix.systemwideinterfaces.core.IMendixObject obj : com.mendix.core.Core.retrieveXPathQuery(context, "//OQL.ExamplePerson" + xpathConstraint))
-			result.add(oql.proxies.ExamplePerson.initialize(context, obj));
+		java.util.List<oqlexample.proxies.ExamplePerson> result = new java.util.ArrayList<oqlexample.proxies.ExamplePerson>();
+		for (com.mendix.systemwideinterfaces.core.IMendixObject obj : com.mendix.core.Core.retrieveXPathQuery(context, "//OQLExample.ExamplePerson" + xpathConstraint))
+			result.add(oqlexample.proxies.ExamplePerson.initialize(context, obj));
 		return result;
 	}
 
@@ -415,7 +415,7 @@ public class ExamplePerson
 	 * Set value of Gender
 	 * @param gender
 	 */
-	public final oql.proxies.Gender getGender()
+	public final oqlexample.proxies.Gender getGender()
 	{
 		return getGender(getContext());
 	}
@@ -424,20 +424,20 @@ public class ExamplePerson
 	 * @param context
 	 * @return value of Gender
 	 */
-	public final oql.proxies.Gender getGender(com.mendix.systemwideinterfaces.core.IContext context)
+	public final oqlexample.proxies.Gender getGender(com.mendix.systemwideinterfaces.core.IContext context)
 	{
 		Object obj = getMendixObject().getValue(context, MemberNames.Gender.toString());
 		if (obj == null)
 			return null;
 
-		return oql.proxies.Gender.valueOf((java.lang.String) obj);
+		return oqlexample.proxies.Gender.valueOf((java.lang.String) obj);
 	}
 
 	/**
 	 * Set value of Gender
 	 * @param gender
 	 */
-	public final void setGender(oql.proxies.Gender gender)
+	public final void setGender(oqlexample.proxies.Gender gender)
 	{
 		setGender(getContext(), gender);
 	}
@@ -447,7 +447,7 @@ public class ExamplePerson
 	 * @param context
 	 * @param gender
 	 */
-	public final void setGender(com.mendix.systemwideinterfaces.core.IContext context, oql.proxies.Gender gender)
+	public final void setGender(com.mendix.systemwideinterfaces.core.IContext context, oqlexample.proxies.Gender gender)
 	{
 		if (gender != null)
 			getMendixObject().setValue(context, MemberNames.Gender.toString(), gender.toString());
@@ -479,7 +479,7 @@ public class ExamplePerson
 
 		if (obj != null && getClass().equals(obj.getClass()))
 		{
-			final oql.proxies.ExamplePerson that = (oql.proxies.ExamplePerson) obj;
+			final oqlexample.proxies.ExamplePerson that = (oqlexample.proxies.ExamplePerson) obj;
 			return getMendixObject().equals(that.getMendixObject());
 		}
 		return false;
@@ -496,7 +496,7 @@ public class ExamplePerson
 	 */
 	public static java.lang.String getType()
 	{
-		return "OQL.ExamplePerson";
+		return "OQLExample.ExamplePerson";
 	}
 
 	/**
