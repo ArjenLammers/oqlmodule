@@ -88,7 +88,6 @@ public class ExecuteOQLStatement extends CustomJavaAction<java.util.List<IMendix
 		IContext context = getContext().createSudoClone();
 		ILogNode logger = Core.getLogger(this.getClass().getSimpleName());
 		IOQLTextGetRequest request = Core.createOQLTextGetRequest();
-		request.setSecurityDisabled(true);
 		request.setQuery(statement);
 		IParameterMap parameterMap = request.createParameterMap();
 		IRetrievalSchema schema = Core.createRetrievalSchema();
