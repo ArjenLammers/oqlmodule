@@ -11,6 +11,7 @@ package oql.actions;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import com.mendix.core.Core;
 import com.mendix.logging.ILogNode;
@@ -87,56 +88,14 @@ public class ExecuteOQLStatement extends CustomJavaAction<java.util.List<IMendix
 		// BEGIN USER CODE
 		IContext context = getContext().createSudoClone();
 		ILogNode logger = Core.getLogger(this.getClass().getSimpleName());
-		IOQLTextGetRequest request = Core.createOQLTextGetRequest();
-		request.setQuery(statement);
-		IParameterMap parameterMap = request.createParameterMap();
-		IRetrievalSchema schema = Core.createRetrievalSchema();
-		schema.setOffset(offset);
-		schema.setAmount(amount);
-		request.setRetrievalSchema(schema);
 		
 		logger.debug("Mapping parameters.");
+		Map<String, Object> parameters = OQL.getNextParameters();
+		List<IMendixObject> result = 
+				OQL.executeOQL(context, statement, returnEntity, amount, offset, parameters);	
 		
-			
-		for (Entry<String, Object> entry : OQL.getNextParameters().entrySet()) {
-			parameterMap.put(entry.getKey(), entry.getValue());
-		}
-		request.setParameters(parameterMap);
-		OQL.reset();
+		OQL.resetParameters();
 		
-		List<IMendixObject> result = new LinkedList<IMendixObject>();
-		logger.debug("Executing query");
-		IDataTable results = Core.retrieveOQLDataTable(context, request);
-		logger.debug("Mapping " + results.getRowCount() + " results.");
-		IDataTableSchema tableSchema = results.getSchema();
-		for (IDataRow row : results.getRows()) {
-			IMendixObject targetObj = Core.instantiate(context, returnEntity);
-			for (int i = 0; i < tableSchema.getColumnCount(); i++) {
-				IDataColumnSchema columnSchema = tableSchema.getColumnSchema(i);
-				logger.trace("Mapping column "+ columnSchema.getName());
-				Object value = row.getValue(context, i);
-				if (value != null && value instanceof IMendixIdentifier) {
-					logger.trace("Treating as association");				
-					/* Escaping an alias as described at https://docs.mendix.com/refguide7/oql-select-clause
-					 * leads to an error when using dots e.g. (OQL.ExamplePerson_ExamplePersonResult).
-					 * Therefore this action accepts the ExamplePerson_ExamplePersonResult part and searches for the
-					 * association that has this in it.
-					 */
-					for (IMetaAssociation association : targetObj.getMetaObject().getDeclaredMetaAssociationsParent()) {
-						String name = association.getName();
-						name = name.substring(name.indexOf('.') + 1);
-						if (name.equals(columnSchema.getName())) {
-							targetObj.setValue(context, association.getName(), value);
-						}
-					}
-				} else {
-					logger.trace("Treating as value");
-					targetObj.setValue(context, columnSchema.getName(), value);
-				}
-				
-			}
-			result.add(targetObj);
-		}
 		return result;
 		// END USER CODE
 	}

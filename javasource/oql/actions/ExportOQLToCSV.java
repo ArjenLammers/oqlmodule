@@ -94,7 +94,7 @@ public class ExportOQLToCSV extends CustomJavaAction<IMendixObject>
 		result.setValue(getContext(), FileDocument.MemberNames.Name.toString(), tmpFile.getName());
 		Core.storeFileDocumentContent(getContext(), result, new FileInputStream(tmpFile));
 		tmpFile.delete();
-		OQL.reset();
+		OQL.resetParameters();
 		
 		return result;
 		// END USER CODE
