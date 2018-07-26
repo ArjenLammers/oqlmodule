@@ -12,7 +12,9 @@ package oql.actions;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.util.Date;
 import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -36,30 +38,42 @@ public class ExportOQLToCSV extends CustomJavaAction<IMendixObject>
 	private String statement;
 	private IMendixObject returnEntity;
 	private Boolean removeNewLinesFromValues;
+	private Boolean zipResult;
 
-	public ExportOQLToCSV(IContext context, String statement, IMendixObject returnEntity, Boolean removeNewLinesFromValues)
+	public ExportOQLToCSV(IContext context, String statement, IMendixObject returnEntity, Boolean removeNewLinesFromValues, Boolean zipResult)
 	{
 		super(context);
 		this.statement = statement;
 		this.returnEntity = returnEntity;
 		this.removeNewLinesFromValues = removeNewLinesFromValues;
+		this.zipResult = zipResult;
 	}
 
 	@Override
 	public IMendixObject executeAction() throws Exception
 	{
 		// BEGIN USER CODE
-		final int PAGE_SIZE = 10000;
+final int PAGE_SIZE = 10000;
 		
 		ILogNode logger = Core.getLogger(this.getClass().getSimpleName());
+		String suffix = ".csv";
+		if (this.zipResult) {
+			suffix += ".zip";
+		}
+		File tmpFile = File.createTempFile("Export", suffix);
+		OutputStream os;
+		FileOutputStream fos = new FileOutputStream(tmpFile);
+		ZipOutputStream zos = null;
+		if (zipResult) {
+			zos = new ZipOutputStream(fos);
+			zos.putNextEntry(new ZipEntry(tmpFile.getName().replaceAll(".zip", "")));
+			os = zos;
+		} else {
+			os = fos;
+		}
 		
-		File tmpFile = File.createTempFile("Export", ".csv.zip");
-		ZipOutputStream zos = new ZipOutputStream(new FileOutputStream(tmpFile));
-		zos.putNextEntry(new ZipEntry(tmpFile.getName().replaceAll(".zip", "")));
-		CSVWriter writer = new CSVWriter(new OutputStreamWriter(zos));
-		
+		CSVWriter writer = new CSVWriter(new OutputStreamWriter(os));
 		IMendixObject result = Core.instantiate(getContext(), this.returnEntity.getType());
-		
 		
 		logger.debug("Executing query");
 		
@@ -76,7 +90,11 @@ public class ExportOQLToCSV extends CustomJavaAction<IMendixObject>
 					if (value == null) {
 						values[i] = "";
 					} else {
-						values[i] = value.toString();
+						if (value instanceof Date) {
+							values[i] = Long.toString(((Date) value).getTime()); // use timestamp to export for more precision than just seconds.
+						} else {
+							values[i] = value.toString();
+						}
 						if (this.removeNewLinesFromValues) {
 							values[i] = values[i].replaceAll("\r", " ").replaceAll("\n", "");
 						}
@@ -84,10 +102,11 @@ public class ExportOQLToCSV extends CustomJavaAction<IMendixObject>
 				}
 				writer.writeNext(values);
 			}
-			results.getRows().clear();
+			
 			if (results.getRowCount() != PAGE_SIZE) {
 				break;
 			}
+			results.getRows().clear();
 			offset += PAGE_SIZE;
 		}
 		writer.close();
