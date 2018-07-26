@@ -45,6 +45,7 @@ public class UserActionsRegistrar implements EventHandler
 			component.actionRegistry().registerUserAction(oql.actions.AddIntegerLongValue.class);
 			component.actionRegistry().registerUserAction(oql.actions.AddObjectParameter.class);
 			component.actionRegistry().registerUserAction(oql.actions.AddStringParameter.class);
+			component.actionRegistry().registerUserAction(oql.actions.CountRowsOQLStatement.class);
 			component.actionRegistry().registerUserAction(oql.actions.ExecuteOQLStatement.class);
 			component.actionRegistry().registerUserAction(oql.actions.ExportOQLToCSV.class);
 			component.actionRegistry().registerUserAction(system.actions.VerifyPassword.class);

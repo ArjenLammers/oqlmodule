@@ -20,6 +20,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import com.mendix.core.Core;
 import com.mendix.logging.ILogNode;
+import com.mendix.systemwideinterfaces.connectionbus.data.IDataColumnSchema;
 import com.mendix.systemwideinterfaces.connectionbus.data.IDataRow;
 import com.mendix.systemwideinterfaces.connectionbus.data.IDataTable;
 import com.mendix.systemwideinterfaces.connectionbus.data.IDataTableSchema;
@@ -39,21 +40,27 @@ public class ExportOQLToCSV extends CustomJavaAction<IMendixObject>
 	private IMendixObject returnEntity;
 	private Boolean removeNewLinesFromValues;
 	private Boolean zipResult;
+	private Boolean exportHeaders;
+	private String separatorChar;
+	private String quoteChar;
 
-	public ExportOQLToCSV(IContext context, String statement, IMendixObject returnEntity, Boolean removeNewLinesFromValues, Boolean zipResult)
+	public ExportOQLToCSV(IContext context, String statement, IMendixObject returnEntity, Boolean removeNewLinesFromValues, Boolean zipResult, Boolean exportHeaders, String separatorChar, String quoteChar)
 	{
 		super(context);
 		this.statement = statement;
 		this.returnEntity = returnEntity;
 		this.removeNewLinesFromValues = removeNewLinesFromValues;
 		this.zipResult = zipResult;
+		this.exportHeaders = exportHeaders;
+		this.separatorChar = separatorChar;
+		this.quoteChar = quoteChar;
 	}
 
 	@Override
 	public IMendixObject executeAction() throws Exception
 	{
 		// BEGIN USER CODE
-final int PAGE_SIZE = 10000;
+		final int PAGE_SIZE = 10000;
 		
 		ILogNode logger = Core.getLogger(this.getClass().getSimpleName());
 		String suffix = ".csv";
@@ -72,7 +79,11 @@ final int PAGE_SIZE = 10000;
 			os = fos;
 		}
 		
-		CSVWriter writer = new CSVWriter(new OutputStreamWriter(os));
+        CSVWriter writer = new CSVWriter(new OutputStreamWriter(os), 
+                this.separatorChar.charAt(0), 
+                this.quoteChar != null ? this.quoteChar.charAt(0) : CSVWriter.NO_QUOTE_CHARACTER, 
+                CSVWriter.NO_ESCAPE_CHARACTER, "\r\n");
+
 		IMendixObject result = Core.instantiate(getContext(), this.returnEntity.getType());
 		
 		logger.debug("Executing query");
@@ -80,9 +91,23 @@ final int PAGE_SIZE = 10000;
 		int offset = 0;
 		while(true) {
 			logger.debug("Executing query offset " + offset);
+			
+			
 			IContext context = getContext().createSudoClone();
 			IDataTable results = Core.retrieveOQLDataTable(context, buildRequest(offset, PAGE_SIZE));
+
 			IDataTableSchema tableSchema = results.getSchema();
+			
+			if (this.exportHeaders && offset == 0) {
+				String[] headers = new String[tableSchema.getColumnCount()];
+				int index = 0;
+				for (IDataColumnSchema columnSchema : tableSchema.getColumnSchemas()) {
+					headers[index] = columnSchema.getName();
+					index++;
+				}
+				writer.writeNext(headers);
+			}
+			
 			for (IDataRow row : results.getRows()) {
 				String[] values = new String[tableSchema.getColumnCount()];
 				for (int i = 0; i < tableSchema.getColumnCount(); i++) {

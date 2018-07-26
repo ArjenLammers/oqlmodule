@@ -44,8 +44,27 @@ public class OQL {
 		getNextParameters().put(name, value);
 	}
 	
+	public static Long countRowsOQL(IContext context, String statement, Long amount, Map<String, Object> parameters)
+		throws CoreException {
+		IOQLTextGetRequest request = Core.createOQLTextGetRequest();
+		request.setQuery(statement);
+		IParameterMap parameterMap = request.createParameterMap();
+		for (Entry<String, Object> entry : OQL.getNextParameters().entrySet()) {
+			parameterMap.put(entry.getKey(), entry.getValue());
+		}
+		request.setParameters(parameterMap);
+		
+		IRetrievalSchema schema = Core.createRetrievalSchema();
+		schema.setAmount(amount);
+		request.setRetrievalSchema(schema);
+
+		logger.debug("Executing query");
+		IDataTable results = Core.retrieveOQLDataTable(context, request);
+		return (long) results.getRowCount();
+	}
+	
 	public static List<IMendixObject> executeOQL(IContext context, String statement, String returnEntity, 
-			Long amount, Long offset,	Map<String, Object> parameters) throws CoreException {
+			Long amount, Long offset, Map<String, Object> parameters) throws CoreException {
 		IOQLTextGetRequest request = Core.createOQLTextGetRequest();
 		request.setQuery(statement);
 		IParameterMap parameterMap = request.createParameterMap();
