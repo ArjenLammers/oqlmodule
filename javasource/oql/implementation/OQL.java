@@ -103,7 +103,7 @@ public class OQL {
 							targetObj.setValue(context, association.getName(), value);
 						}
 					}
-				} else {
+				} else if (value != null) {
 					logger.trace("Treating as value");
 					
 					IMetaObject targetMeta = targetObj.getMetaObject();
