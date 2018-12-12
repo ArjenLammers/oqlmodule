@@ -31,6 +31,8 @@ import oql.implementation.OQL;
 
 /**
  * This action executes a given OQL statement and accepts parameters.
+ * One can specify using the preserveParameters argument if parameters should be reset after invocation of this action.
+ * 
  * Statements can easily be developed using the DataSet and one can use the Mendix documentation (https://docs.mendix.com/refguide7/oql) as reference.
  * 
  * For each column, the action expects an attribute in the result entity with the same name.
@@ -72,14 +74,16 @@ public class ExecuteOQLStatement extends CustomJavaAction<java.util.List<IMendix
 	private String returnEntity;
 	private Long amount;
 	private Long offset;
+	private Boolean preserveParameters;
 
-	public ExecuteOQLStatement(IContext context, String statement, String returnEntity, Long amount, Long offset)
+	public ExecuteOQLStatement(IContext context, String statement, String returnEntity, Long amount, Long offset, Boolean preserveParameters)
 	{
 		super(context);
 		this.statement = statement;
 		this.returnEntity = returnEntity;
 		this.amount = amount;
 		this.offset = offset;
+		this.preserveParameters = preserveParameters;
 	}
 
 	@Override
@@ -94,7 +98,8 @@ public class ExecuteOQLStatement extends CustomJavaAction<java.util.List<IMendix
 		List<IMendixObject> result = 
 				OQL.executeOQL(context, statement, returnEntity, amount, offset, parameters);	
 		
-		OQL.resetParameters();
+		if (!this.preserveParameters) 
+			OQL.resetParameters();
 		
 		return result;
 		// END USER CODE
