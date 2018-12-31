@@ -58,13 +58,13 @@ public class OQL {
 		schema.setAmount(amount);
 		request.setRetrievalSchema(schema);
 
-		logger.debug("Executing query");
+		logger.debug("Executing query:\n" + statement);
 		IDataTable results = Core.retrieveOQLDataTable(context, request);
 		return (long) results.getRowCount();
 	}
 	
 	public static List<IMendixObject> executeOQL(IContext context, String statement, String returnEntity, 
-			Long amount, Long offset, Map<String, Object> parameters) throws CoreException {
+			Long amount, Long offset, Map<String, Object> parameters) throws CoreException, NullPointerException {
 		IOQLTextGetRequest request = Core.createOQLTextGetRequest();
 		request.setQuery(statement);
 		IParameterMap parameterMap = request.createParameterMap();
@@ -79,7 +79,7 @@ public class OQL {
 		request.setRetrievalSchema(schema);
 		
 		List<IMendixObject> result = new LinkedList<IMendixObject>();
-		logger.debug("Executing query");
+		logger.debug("Executing query:\n" + statement);
 		IDataTable results = Core.retrieveOQLDataTable(context, request);
 		logger.debug("Mapping " + results.getRowCount() + " results.");
 		IDataTableSchema tableSchema = results.getSchema();
@@ -109,12 +109,32 @@ public class OQL {
 					IMetaObject targetMeta = targetObj.getMetaObject();
 					IMetaPrimitive primitive = targetMeta.getMetaPrimitive(columnSchema.getName());
 					
-					if (value instanceof Integer && primitive.getType() == PrimitiveType.Long) {
-						value = (Long) ((Integer) value).longValue();
-					} else if (value instanceof Long && primitive.getType() == PrimitiveType.Integer) {
-						value = Integer.parseInt(((Long) value).toString()); // not so happy way of conversion
+					if (primitive != null) {
+						
+						if (value instanceof Integer && primitive.getType() == PrimitiveType.Long) {
+							value = (Long) ((Integer) value).longValue();
+						} else if (value instanceof Long && primitive.getType() == PrimitiveType.Integer) {
+							value = Integer.parseInt(((Long) value).toString()); // not so happy way of conversion
+						}
+					
+						targetObj.setValue(context, columnSchema.getName(), value);
+						
+					} else {
+						boolean found = false;
+						for (IMetaAssociation association : targetObj.getMetaObject().getDeclaredMetaAssociationsParent()) {
+							String name = association.getName();
+							name = name.substring(name.indexOf('.') + 1);
+							if (name.equals(columnSchema.getName())) {
+								found = true;
+							}
+						}
+						
+						if (!found) {
+							throw new NullPointerException ("Cannot find attribute with name" + columnSchema.getName() );
+						}
 					}
-					targetObj.setValue(context, columnSchema.getName(), value);
+					
+					
 				}
 				
 			}
