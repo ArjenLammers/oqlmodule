@@ -2,17 +2,16 @@
 //
 // WARNING: Code you write here will be lost the next time you deploy the project.
 
-package oqlexample.proxies;
+package system.proxies;
 
-public enum Gender
+public enum UserType
 {
-	Male(new java.lang.String[][] { new java.lang.String[] { "en_US", "Male" } }),
-	Female(new java.lang.String[][] { new java.lang.String[] { "en_US", "Female" } }),
-	Other(new java.lang.String[][] { new java.lang.String[] { "en_US", "Other" } });
+	Internal(new java.lang.String[][] { new java.lang.String[] { "en_US", "Internal" }, new java.lang.String[] { "nl_NL", "Intern" } }),
+	External(new java.lang.String[][] { new java.lang.String[] { "en_US", "External" }, new java.lang.String[] { "nl_NL", "Extern" } });
 
 	private java.util.Map<java.lang.String, java.lang.String> captions;
 
-	private Gender(java.lang.String[][] captionStrings)
+	private UserType(java.lang.String[][] captionStrings)
 	{
 		this.captions = new java.util.HashMap<java.lang.String, java.lang.String>();
 		for (java.lang.String[] captionString : captionStrings)
