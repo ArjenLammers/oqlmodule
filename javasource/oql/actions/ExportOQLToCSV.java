@@ -43,8 +43,9 @@ public class ExportOQLToCSV extends CustomJavaAction<IMendixObject>
 	private java.lang.Boolean exportHeaders;
 	private java.lang.String separatorChar;
 	private java.lang.String quoteChar;
+	private java.lang.String escapeChar;
 
-	public ExportOQLToCSV(IContext context, java.lang.String statement, IMendixObject returnEntity, java.lang.Boolean removeNewLinesFromValues, java.lang.Boolean zipResult, java.lang.Boolean exportHeaders, java.lang.String separatorChar, java.lang.String quoteChar)
+	public ExportOQLToCSV(IContext context, java.lang.String statement, IMendixObject returnEntity, java.lang.Boolean removeNewLinesFromValues, java.lang.Boolean zipResult, java.lang.Boolean exportHeaders, java.lang.String separatorChar, java.lang.String quoteChar, java.lang.String escapeChar)
 	{
 		super(context);
 		this.statement = statement;
@@ -54,6 +55,7 @@ public class ExportOQLToCSV extends CustomJavaAction<IMendixObject>
 		this.exportHeaders = exportHeaders;
 		this.separatorChar = separatorChar;
 		this.quoteChar = quoteChar;
+		this.escapeChar = escapeChar;
 	}
 
 	@java.lang.Override
@@ -81,8 +83,9 @@ public class ExportOQLToCSV extends CustomJavaAction<IMendixObject>
 		
         CSVWriter writer = new CSVWriter(new OutputStreamWriter(os), 
                 this.separatorChar.charAt(0), 
-                this.quoteChar != null ? this.quoteChar.charAt(0) : CSVWriter.NO_QUOTE_CHARACTER, 
-                CSVWriter.NO_ESCAPE_CHARACTER, "\r\n");
+                this.quoteChar != null ? this.quoteChar.charAt(0) : CSVWriter.NO_QUOTE_CHARACTER,
+                this.escapeChar != null ? this.escapeChar.charAt(0) : CSVWriter.NO_ESCAPE_CHARACTER, 
+                "\r\n");
 
 		IMendixObject result = Core.instantiate(getContext(), this.returnEntity.getType());
 		
