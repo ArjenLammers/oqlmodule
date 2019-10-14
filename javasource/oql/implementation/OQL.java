@@ -4,7 +4,6 @@ import com.mendix.core.Core;
 import com.mendix.core.CoreException;
 import com.mendix.logging.ILogNode;
 import com.mendix.systemwideinterfaces.connectionbus.data.IDataColumnSchema;
-import com.mendix.systemwideinterfaces.connectionbus.data.IDataRow;
 import com.mendix.systemwideinterfaces.connectionbus.data.IDataTable;
 import com.mendix.systemwideinterfaces.connectionbus.data.IDataTableSchema;
 import com.mendix.systemwideinterfaces.connectionbus.requests.IParameterMap;
@@ -21,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 public class OQL {
@@ -77,24 +77,24 @@ public class OQL {
 
 		List<IMendixObject> result = new ArrayList<>();
 		IDataTable results = runQuery(statement, context, request);
-		LOGGER.debug("Mapping " + results.getRowCount() + " results.");
+		LOGGER.debug(String.format("Mapping %d results.", results.getRowCount()));
 		IDataTableSchema tableSchema = results.getSchema();
 
-		for (IDataRow row : results.getRows()) {
+		results.getRows().forEach(row -> {
 			IMendixObject targetObj = Core.instantiate(context, returnEntity);
-			for (int i = 0; i < tableSchema.getColumnCount(); i++) {
-				IDataColumnSchema columnSchema = tableSchema.getColumnSchema(i);
+			tableSchema.getColumnSchemas().forEach(columnSchema -> {
 				LOGGER.trace("Mapping column " + columnSchema.getName());
-				Object value = row.getValue(context, i);
-				if (value != null && value instanceof IMendixIdentifier) {
-					copyAssociationValueToTarget(targetObj, columnSchema, value, context);
-				} else {
-					copyPrimitiveValueToTarget(targetObj, columnSchema, value, context);
-				}
-
-			}
+				Optional.ofNullable(row.getValue(context, columnSchema))
+					.ifPresent(value -> {
+						if (value instanceof IMendixIdentifier) {
+							copyAssociationValueToTarget(targetObj, columnSchema, value, context);
+						} else {
+							copyPrimitiveValueToTarget(targetObj, columnSchema, value, context);
+						}
+					});
+			});
 			result.add(targetObj);
-		}
+		});
 
 		return result;
 	}
