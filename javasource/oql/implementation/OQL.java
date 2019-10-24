@@ -79,7 +79,7 @@ public class OQL {
 		request.setRetrievalSchema(schema);
 		
 		List<IMendixObject> result = new LinkedList<IMendixObject>();
-		logger.debug("Executing query");
+		logger.debug("Executing query\n:" + statement);
 		IDataTable results = Core.retrieveOQLDataTable(context, request);
 		logger.debug("Mapping " + results.getRowCount() + " results.");
 		IDataTableSchema tableSchema = results.getSchema();
@@ -96,18 +96,27 @@ public class OQL {
 					 * Therefore this action accepts the ExamplePerson_ExamplePersonResult part and searches for the
 					 * association that has this in it.
 					 */
+					boolean found = false;
 					for (IMetaAssociation association : targetObj.getMetaObject().getDeclaredMetaAssociationsParent()) {
 						String name = association.getName();
 						name = name.substring(name.indexOf('.') + 1);
 						if (name.equals(columnSchema.getName())) {
 							targetObj.setValue(context, association.getName(), value);
+							found = true;
 						}
+					}
+					if (!found) {
+						throw new NullPointerException("Could not find result association " + columnSchema.getName() + " in target object.");
 					}
 				} else {
 					logger.trace("Treating as value");
-					
+
 					IMetaObject targetMeta = targetObj.getMetaObject();
 					IMetaPrimitive primitive = targetMeta.getMetaPrimitive(columnSchema.getName());
+					
+					if (primitive == null) {
+						throw new NullPointerException("Could not find result attribute " + columnSchema.getName() + " in target object.");
+					}
 					
 					if (value instanceof Integer && primitive.getType() == PrimitiveType.Long) {
 						value = (Long) ((Integer) value).longValue();
