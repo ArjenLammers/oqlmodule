@@ -28,6 +28,7 @@ import com.mendix.systemwideinterfaces.connectionbus.requests.IParameterMap;
 import com.mendix.systemwideinterfaces.connectionbus.requests.IRetrievalSchema;
 import com.mendix.systemwideinterfaces.connectionbus.requests.types.IOQLTextGetRequest;
 import com.mendix.systemwideinterfaces.core.IContext;
+import com.mendix.systemwideinterfaces.core.IMendixIdentifier;
 import com.mendix.systemwideinterfaces.core.IMendixObject;
 import com.mendix.webui.CustomJavaAction;
 import com.opencsv.CSVWriter;
@@ -37,7 +38,7 @@ import system.proxies.FileDocument;
 public class ExportOQLToCSV extends CustomJavaAction<IMendixObject>
 {
 	private java.lang.String statement;
-	private IMendixObject returnEntity;
+	private java.lang.String returnEntity;
 	private java.lang.Boolean removeNewLinesFromValues;
 	private java.lang.Boolean zipResult;
 	private java.lang.Boolean exportHeaders;
@@ -45,7 +46,7 @@ public class ExportOQLToCSV extends CustomJavaAction<IMendixObject>
 	private java.lang.String quoteChar;
 	private java.lang.String escapeChar;
 
-	public ExportOQLToCSV(IContext context, java.lang.String statement, IMendixObject returnEntity, java.lang.Boolean removeNewLinesFromValues, java.lang.Boolean zipResult, java.lang.Boolean exportHeaders, java.lang.String separatorChar, java.lang.String quoteChar, java.lang.String escapeChar)
+	public ExportOQLToCSV(IContext context, java.lang.String statement, java.lang.String returnEntity, java.lang.Boolean removeNewLinesFromValues, java.lang.Boolean zipResult, java.lang.Boolean exportHeaders, java.lang.String separatorChar, java.lang.String quoteChar, java.lang.String escapeChar)
 	{
 		super(context);
 		this.statement = statement;
@@ -87,7 +88,7 @@ public class ExportOQLToCSV extends CustomJavaAction<IMendixObject>
                 this.escapeChar != null ? this.escapeChar.charAt(0) : CSVWriter.NO_ESCAPE_CHARACTER, 
                 "\r\n");
 
-		IMendixObject result = Core.instantiate(getContext(), this.returnEntity.getType());
+		IMendixObject result = Core.instantiate(getContext(), this.returnEntity);
 		
 		logger.debug("Executing query");
 		
@@ -120,6 +121,8 @@ public class ExportOQLToCSV extends CustomJavaAction<IMendixObject>
 					} else {
 						if (value instanceof Date) {
 							values[i] = Long.toString(((Date) value).getTime()); // use timestamp to export for more precision than just seconds.
+						} else if (value instanceof IMendixIdentifier) {
+							values[i] = Long.toString(((IMendixIdentifier) value).toLong());
 						} else {
 							values[i] = value.toString();
 						}
