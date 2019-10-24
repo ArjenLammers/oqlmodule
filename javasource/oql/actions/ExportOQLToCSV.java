@@ -28,6 +28,7 @@ import com.mendix.systemwideinterfaces.connectionbus.requests.IParameterMap;
 import com.mendix.systemwideinterfaces.connectionbus.requests.IRetrievalSchema;
 import com.mendix.systemwideinterfaces.connectionbus.requests.types.IOQLTextGetRequest;
 import com.mendix.systemwideinterfaces.core.IContext;
+import com.mendix.systemwideinterfaces.core.IMendixIdentifier;
 import com.mendix.systemwideinterfaces.core.IMendixObject;
 import com.mendix.webui.CustomJavaAction;
 import com.opencsv.CSVWriter;
@@ -117,6 +118,8 @@ public class ExportOQLToCSV extends CustomJavaAction<IMendixObject>
 					} else {
 						if (value instanceof Date) {
 							values[i] = Long.toString(((Date) value).getTime()); // use timestamp to export for more precision than just seconds.
+						} else if (value instanceof IMendixIdentifier) {
+							values[i] = Long.toString(((IMendixIdentifier) value).toLong());
 						} else {
 							values[i] = value.toString();
 						}
