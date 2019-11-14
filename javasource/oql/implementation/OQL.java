@@ -108,7 +108,7 @@ public class OQL {
 					if (!found) {
 						throw new NullPointerException("Could not find result association " + columnSchema.getName() + " in target object.");
 					}
-				} else {
+				} else if (value != null) {
 					logger.trace("Treating as value");
 
 					IMetaObject targetMeta = targetObj.getMetaObject();
