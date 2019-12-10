@@ -74,8 +74,8 @@ public class OQL {
 		request.setParameters(parameterMap);
 		
 		IRetrievalSchema schema = Core.createRetrievalSchema();
-		schema.setOffset(offset);
-		schema.setAmount(amount);
+		schema.setOffset(offset != null ? offset : 0);
+		schema.setAmount(amount != null ? offset : 0);
 		request.setRetrievalSchema(schema);
 		
 		List<IMendixObject> result = new LinkedList<IMendixObject>();
