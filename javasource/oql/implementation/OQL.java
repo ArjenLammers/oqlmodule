@@ -89,41 +89,44 @@ public class OQL {
 				IDataColumnSchema columnSchema = tableSchema.getColumnSchema(i);
 				logger.trace("Mapping column "+ columnSchema.getName());
 				Object value = row.getValue(context, i);
-				if (value != null && value instanceof IMendixIdentifier) {
-					logger.trace("Treating as association");				
-					/* Escaping an alias as described at https://docs.mendix.com/refguide7/oql-select-clause
-					 * leads to an error when using dots e.g. (OQL.ExamplePerson_ExamplePersonResult).
-					 * Therefore this action accepts the ExamplePerson_ExamplePersonResult part and searches for the
-					 * association that has this in it.
-					 */
-					boolean found = false;
-					for (IMetaAssociation association : targetObj.getMetaObject().getDeclaredMetaAssociationsParent()) {
-						String name = association.getName();
-						name = name.substring(name.indexOf('.') + 1);
-						if (name.equals(columnSchema.getName())) {
-							targetObj.setValue(context, association.getName(), value);
-							found = true;
-						}
-					}
-					if (!found) {
-						throw new NullPointerException("Could not find result association " + columnSchema.getName() + " in target object.");
-					}
-				} else {
-					logger.trace("Treating as value");
-
-					IMetaObject targetMeta = targetObj.getMetaObject();
+				IMetaObject targetMeta = targetObj.getMetaObject();
+				
+				if (value == null) {
 					IMetaPrimitive primitive = targetMeta.getMetaPrimitive(columnSchema.getName());
+					if (primitive != null) {
+						targetObj.setValue(context, columnSchema.getName(), null);
+					} else {
+						if (getAssociation(targetObj, columnSchema) == null) {
+							throw new NullPointerException("Null value found " + columnSchema.getName() + 
+									" was not found as association or attribute.");
+						}
+					} 
 					
-					if (primitive == null) {
-						throw new NullPointerException("Could not find result attribute " + columnSchema.getName() + " in target object.");
-					}
+				} else {
 					
-					if (value instanceof Integer && primitive.getType() == PrimitiveType.Long) {
-						value = (Long) ((Integer) value).longValue();
-					} else if (value instanceof Long && primitive.getType() == PrimitiveType.Integer) {
-						value = Integer.parseInt(((Long) value).toString()); // not so happy way of conversion
+					if (value instanceof IMendixIdentifier) {
+						logger.trace("Treating as association");				
+						IMetaAssociation association = getAssociation(targetObj, columnSchema);
+						if (association != null) {
+							targetObj.setValue(context, association.getName(), value);
+						} else {
+							throw new NullPointerException("Could not find result association " + columnSchema.getName() + " in target object.");
+						}
+					} else {
+						logger.trace("Treating as value");
+						IMetaPrimitive primitive = targetMeta.getMetaPrimitive(columnSchema.getName());
+						
+						if (primitive == null) {
+							throw new NullPointerException("Could not find result attribute " + columnSchema.getName() + " in target object.");
+						}
+						
+						if (value instanceof Integer && primitive.getType() == PrimitiveType.Long) {
+							value = (Long) ((Integer) value).longValue();
+						} else if (value instanceof Long && primitive.getType() == PrimitiveType.Integer) {
+							value = Integer.parseInt(((Long) value).toString()); // not so happy way of conversion
+						}
+						targetObj.setValue(context, columnSchema.getName(), value);
 					}
-					targetObj.setValue(context, columnSchema.getName(), value);
 				}
 				
 			}
@@ -133,4 +136,20 @@ public class OQL {
 		return result;
 	}
 
+	private static IMetaAssociation getAssociation(IMendixObject targetObj, IDataColumnSchema columnSchema) {
+		/* Escaping an alias as described at https://docs.mendix.com/refguide7/oql-select-clause
+		 * leads to an error when using dots e.g. (OQL.ExamplePerson_ExamplePersonResult).
+		 * Therefore this action accepts the ExamplePerson_ExamplePersonResult part and searches for the
+		 * association that has this in it.
+		 */
+		for (IMetaAssociation association : targetObj.getMetaObject().getDeclaredMetaAssociationsParent()) {
+			String name = association.getName();
+			name = name.substring(name.indexOf('.') + 1);
+			if (name.equals(columnSchema.getName())) {
+				return association;
+			}
+		}
+		return null;
+	}
+	
 }
