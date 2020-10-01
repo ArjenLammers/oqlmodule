@@ -1,5 +1,6 @@
 package oql.implementation;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -124,6 +125,8 @@ public class OQL {
 							value = (Long) ((Integer) value).longValue();
 						} else if (value instanceof Long && primitive.getType() == PrimitiveType.Integer) {
 							value = Integer.parseInt(((Long) value).toString()); // not so happy way of conversion
+						} else if (value instanceof Double && primitive.getType() == PrimitiveType.Decimal) {
+							value = new BigDecimal((Double) value);
 						}
 						targetObj.setValue(context, columnSchema.getName(), value);
 					}
