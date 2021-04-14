@@ -17,72 +17,42 @@ public class Microflows
 	// These are the microflows for the OQL module
 	public static void aCT_ExecuteOQL(IContext context, oql.proxies.Query _query)
 	{
-		try
-		{
-			Map<java.lang.String, Object> params = new HashMap<java.lang.String, Object>();
-			params.put("Query", _query == null ? null : _query.getMendixObject());
-			Core.execute(context, "OQL.ACT_ExecuteOQL", params);
-		}
-		catch (CoreException e)
-		{
-			throw new MendixRuntimeException(e);
-		}
+		Map<java.lang.String, Object> params = new HashMap<>();
+		params.put("Query", _query == null ? null : _query.getMendixObject());
+		Core.microflowCall("OQL.ACT_ExecuteOQL").withParams(params).execute(context);
 	}
 	public static java.util.List<oql.proxies.ExamplePersonResult> dS_ExampleOQL(IContext context)
 	{
-		try
+		Map<java.lang.String, Object> params = new HashMap<>();
+		java.util.List<IMendixObject> objs = Core.microflowCall("OQL.DS_ExampleOQL").withParams(params).execute(context);
+		java.util.List<oql.proxies.ExamplePersonResult> result = null;
+		if (objs != null)
 		{
-			Map<java.lang.String, Object> params = new HashMap<java.lang.String, Object>();
-			java.util.List<IMendixObject> objs = Core.execute(context, "OQL.DS_ExampleOQL", params);
-			java.util.List<oql.proxies.ExamplePersonResult> result = null;
-			if (objs != null)
-			{
-				result = new java.util.ArrayList<oql.proxies.ExamplePersonResult>();
-				for (IMendixObject obj : objs)
-					result.add(oql.proxies.ExamplePersonResult.initialize(context, obj));
-			}
-			return result;
+			result = new java.util.ArrayList<>();
+			for (IMendixObject obj : objs)
+				result.add(oql.proxies.ExamplePersonResult.initialize(context, obj));
 		}
-		catch (CoreException e)
-		{
-			throw new MendixRuntimeException(e);
-		}
+		return result;
 	}
 	public static oql.proxies.Query dS_GetQuery(IContext context)
 	{
-		try
-		{
-			Map<java.lang.String, Object> params = new HashMap<java.lang.String, Object>();
-			IMendixObject result = (IMendixObject)Core.execute(context, "OQL.DS_GetQuery", params);
-			return result == null ? null : oql.proxies.Query.initialize(context, result);
-		}
-		catch (CoreException e)
-		{
-			throw new MendixRuntimeException(e);
-		}
+		Map<java.lang.String, Object> params = new HashMap<>();
+		IMendixObject result = (IMendixObject)Core.microflowCall("OQL.DS_GetQuery").withParams(params).execute(context);
+		return result == null ? null : oql.proxies.Query.initialize(context, result);
 	}
 	public static void iVK_CreateContent(IContext context)
 	{
-		try
-		{
-			Map<java.lang.String, Object> params = new HashMap<java.lang.String, Object>();
-			Core.execute(context, "OQL.IVK_CreateContent", params);
-		}
-		catch (CoreException e)
-		{
-			throw new MendixRuntimeException(e);
-		}
+		Map<java.lang.String, Object> params = new HashMap<>();
+		Core.microflowCall("OQL.IVK_CreateContent").withParams(params).execute(context);
 	}
 	public static void iVK_PerformTests(IContext context)
 	{
-		try
-		{
-			Map<java.lang.String, Object> params = new HashMap<java.lang.String, Object>();
-			Core.execute(context, "OQL.IVK_PerformTests", params);
-		}
-		catch (CoreException e)
-		{
-			throw new MendixRuntimeException(e);
-		}
+		Map<java.lang.String, Object> params = new HashMap<>();
+		Core.microflowCall("OQL.IVK_PerformTests").withParams(params).execute(context);
+	}
+	public static void iVK_TestCount(IContext context)
+	{
+		Map<java.lang.String, Object> params = new HashMap<>();
+		Core.microflowCall("OQL.IVK_TestCount").withParams(params).execute(context);
 	}
 }
