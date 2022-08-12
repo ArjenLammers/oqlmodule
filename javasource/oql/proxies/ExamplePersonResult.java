@@ -29,7 +29,7 @@ public class ExamplePersonResult
 		HeightInDecimal("HeightInDecimal"),
 		Gender("Gender"),
 		ExamplePersonResult_ExamplePerson("OQL.ExamplePersonResult_ExamplePerson"),
-		MarriedTo("OQL.MarriedTo");
+		Result_MarriedTo("OQL.Result_MarriedTo");
 
 		private java.lang.String metaName;
 
@@ -456,46 +456,46 @@ public class ExamplePersonResult
 	}
 
 	/**
-	 * @return value of MarriedTo
+	 * @return value of Result_MarriedTo
 	 */
-	public final oql.proxies.ExamplePerson getMarriedTo() throws com.mendix.core.CoreException
+	public final oql.proxies.ExamplePerson getResult_MarriedTo() throws com.mendix.core.CoreException
 	{
-		return getMarriedTo(getContext());
+		return getResult_MarriedTo(getContext());
 	}
 
 	/**
 	 * @param context
-	 * @return value of MarriedTo
+	 * @return value of Result_MarriedTo
 	 */
-	public final oql.proxies.ExamplePerson getMarriedTo(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
+	public final oql.proxies.ExamplePerson getResult_MarriedTo(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
 		oql.proxies.ExamplePerson result = null;
-		com.mendix.systemwideinterfaces.core.IMendixIdentifier identifier = getMendixObject().getValue(context, MemberNames.MarriedTo.toString());
+		com.mendix.systemwideinterfaces.core.IMendixIdentifier identifier = getMendixObject().getValue(context, MemberNames.Result_MarriedTo.toString());
 		if (identifier != null)
 			result = oql.proxies.ExamplePerson.load(context, identifier);
 		return result;
 	}
 
 	/**
-	 * Set value of MarriedTo
-	 * @param marriedto
+	 * Set value of Result_MarriedTo
+	 * @param result_marriedto
 	 */
-	public final void setMarriedTo(oql.proxies.ExamplePerson marriedto)
+	public final void setResult_MarriedTo(oql.proxies.ExamplePerson result_marriedto)
 	{
-		setMarriedTo(getContext(), marriedto);
+		setResult_MarriedTo(getContext(), result_marriedto);
 	}
 
 	/**
-	 * Set value of MarriedTo
+	 * Set value of Result_MarriedTo
 	 * @param context
-	 * @param marriedto
+	 * @param result_marriedto
 	 */
-	public final void setMarriedTo(com.mendix.systemwideinterfaces.core.IContext context, oql.proxies.ExamplePerson marriedto)
+	public final void setResult_MarriedTo(com.mendix.systemwideinterfaces.core.IContext context, oql.proxies.ExamplePerson result_marriedto)
 	{
-		if (marriedto == null)
-			getMendixObject().setValue(context, MemberNames.MarriedTo.toString(), null);
+		if (result_marriedto == null)
+			getMendixObject().setValue(context, MemberNames.Result_MarriedTo.toString(), null);
 		else
-			getMendixObject().setValue(context, MemberNames.MarriedTo.toString(), marriedto.getMendixObject().getId());
+			getMendixObject().setValue(context, MemberNames.Result_MarriedTo.toString(), result_marriedto.getMendixObject().getId());
 	}
 
 	/**

@@ -28,7 +28,7 @@ public class ExamplePerson
 		Active("Active"),
 		HeightInDecimal("HeightInDecimal"),
 		Gender("Gender"),
-		MarriedTo("MarriedTo");
+		MarriedTo("OQL.MarriedTo");
 
 		private java.lang.String metaName;
 
@@ -422,7 +422,7 @@ public class ExamplePerson
 	/**
 	 * @return value of MarriedTo
 	 */
-	public final java.lang.Long getMarriedTo()
+	public final oql.proxies.ExamplePerson getMarriedTo() throws com.mendix.core.CoreException
 	{
 		return getMarriedTo(getContext());
 	}
@@ -431,16 +431,20 @@ public class ExamplePerson
 	 * @param context
 	 * @return value of MarriedTo
 	 */
-	public final java.lang.Long getMarriedTo(com.mendix.systemwideinterfaces.core.IContext context)
+	public final oql.proxies.ExamplePerson getMarriedTo(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
-		return (java.lang.Long) getMendixObject().getValue(context, MemberNames.MarriedTo.toString());
+		oql.proxies.ExamplePerson result = null;
+		com.mendix.systemwideinterfaces.core.IMendixIdentifier identifier = getMendixObject().getValue(context, MemberNames.MarriedTo.toString());
+		if (identifier != null)
+			result = oql.proxies.ExamplePerson.load(context, identifier);
+		return result;
 	}
 
 	/**
 	 * Set value of MarriedTo
 	 * @param marriedto
 	 */
-	public final void setMarriedTo(java.lang.Long marriedto)
+	public final void setMarriedTo(oql.proxies.ExamplePerson marriedto)
 	{
 		setMarriedTo(getContext(), marriedto);
 	}
@@ -450,9 +454,12 @@ public class ExamplePerson
 	 * @param context
 	 * @param marriedto
 	 */
-	public final void setMarriedTo(com.mendix.systemwideinterfaces.core.IContext context, java.lang.Long marriedto)
+	public final void setMarriedTo(com.mendix.systemwideinterfaces.core.IContext context, oql.proxies.ExamplePerson marriedto)
 	{
-		getMendixObject().setValue(context, MemberNames.MarriedTo.toString(), marriedto);
+		if (marriedto == null)
+			getMendixObject().setValue(context, MemberNames.MarriedTo.toString(), null);
+		else
+			getMendixObject().setValue(context, MemberNames.MarriedTo.toString(), marriedto.getMendixObject().getId());
 	}
 
 	/**

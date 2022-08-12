@@ -30,7 +30,7 @@ public class AddObjectParameter extends CustomJavaAction<java.lang.Boolean>
 	public java.lang.Boolean executeAction() throws Exception
 	{
 		// BEGIN USER CODE
-		OQL.addParameter(name, value.getId());
+		OQL.addParameter(name, value != null ? value.getId() : null);
 		return true;
 		// END USER CODE
 	}
