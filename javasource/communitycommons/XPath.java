@@ -21,8 +21,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.translate.AggregateTranslator;
+import org.apache.commons.text.translate.CharSequenceTranslator;
+import org.apache.commons.text.translate.EntityArrays;
+import org.apache.commons.text.translate.LookupTranslator;
 
 import com.mendix.core.Core;
 import com.mendix.core.CoreException;
@@ -66,7 +69,7 @@ public class XPath<T>
 	private int	limit = -1;
 	private LinkedHashMap<String, String> sorting = new LinkedHashMap<String, String>(); //important, linked map!
 	private LinkedList<String> closeStack = new LinkedList<String>();
-	private StringBuffer builder = new StringBuffer();
+	private StringBuilder builder = new StringBuilder();
 	private IContext	context;
 	private Class<T>	proxyClass;
 	private boolean requiresBinOp = false; //state property, indicates whether and 'and' needs to be inserted before the next constraint
@@ -295,7 +298,6 @@ public class XPath<T>
 	/**
 	 * Given a set of attribute names and values, tries to find the first object that matches all conditions, or creates one
 	 * 
-	 * @param autoCommit: whether the object should be committed once created (default: true)
 	 * @param keysAndValues
 	 * @return
 	 * @throws CoreException 
@@ -330,7 +332,7 @@ public class XPath<T>
 					return res;
 				} catch (CoreException e) {
 					if (synchronizedContext.isInTransaction()) {
-						synchronizedContext.rollbackTransAction();
+						synchronizedContext.rollbackTransaction();
 					}
 					throw e;
 				}
@@ -569,7 +571,7 @@ public class XPath<T>
 			return value.toString() + "()"; //xpath boolean, you know..
 		}
 		if (value instanceof String) {
-			return "'" + StringEscapeUtils.escapeXml(String.valueOf(value)) + "'";
+			return "'" + ESCAPE_XML.translate(String.valueOf(value)) + "'";
 		}
 		
 		//Object, assume its a proxy and deproxiefy
@@ -587,7 +589,7 @@ public class XPath<T>
 		}
 		
 		//assume some string representation
-		return "'" + StringEscapeUtils.escapeXml(String.valueOf(value)) + "'";
+		return "'" + ESCAPE_XML.translate(String.valueOf(value)) + "'";
 	}
 	
 	public static IMendixObject proxyToMendixObject(Object value)
@@ -826,6 +828,11 @@ public class XPath<T>
 		return true;
 	}
 
-
-
+	// Implement our own ESCAPE_XML because the original got deprecated and we originally translated only a very small
+	// subset of characters.
+	private static final CharSequenceTranslator ESCAPE_XML =
+		new AggregateTranslator(
+			new LookupTranslator(EntityArrays.BASIC_ESCAPE),
+			new LookupTranslator(EntityArrays.APOS_ESCAPE)
+		);
 }

@@ -23,7 +23,7 @@ public class CSVDownload extends system.proxies.FileDocument
 		HasContents("HasContents"),
 		Size("Size");
 
-		private java.lang.String metaName;
+		private final java.lang.String metaName;
 
 		MemberNames(java.lang.String s)
 		{
@@ -39,14 +39,15 @@ public class CSVDownload extends system.proxies.FileDocument
 
 	public CSVDownload(com.mendix.systemwideinterfaces.core.IContext context)
 	{
-		this(context, com.mendix.core.Core.instantiate(context, "OQL.CSVDownload"));
+		this(context, com.mendix.core.Core.instantiate(context, entityName));
 	}
 
 	protected CSVDownload(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject cSVDownloadMendixObject)
 	{
 		super(context, cSVDownloadMendixObject);
-		if (!com.mendix.core.Core.isSubClassOf("OQL.CSVDownload", cSVDownloadMendixObject.getType()))
-			throw new java.lang.IllegalArgumentException("The given object is not a OQL.CSVDownload");
+		if (!com.mendix.core.Core.isSubClassOf(entityName, cSVDownloadMendixObject.getType())) {
+			throw new java.lang.IllegalArgumentException(String.format("The given object is not a %s", entityName));
+		}	
 	}
 
 	/**
@@ -61,6 +62,9 @@ public class CSVDownload extends system.proxies.FileDocument
 	/**
 	 * Initialize a proxy using context (recommended). This context will be used for security checking when the get- and set-methods without context parameters are called.
 	 * The get- and set-methods with context parameter should be used when for instance sudo access is necessary (IContext.createSudoClone() can be used to obtain sudo access).
+	 * @param context The context to be used
+	 * @param mendixObject The Mendix object for the new instance
+	 * @return a new instance of this proxy class
 	 */
 	public static oql.proxies.CSVDownload initialize(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject mendixObject)
 	{
@@ -75,18 +79,19 @@ public class CSVDownload extends system.proxies.FileDocument
 
 	public static java.util.List<oql.proxies.CSVDownload> load(com.mendix.systemwideinterfaces.core.IContext context, java.lang.String xpathConstraint) throws com.mendix.core.CoreException
 	{
-		java.util.List<oql.proxies.CSVDownload> result = new java.util.ArrayList<oql.proxies.CSVDownload>();
-		for (com.mendix.systemwideinterfaces.core.IMendixObject obj : com.mendix.core.Core.retrieveXPathQuery(context, "//OQL.CSVDownload" + xpathConstraint))
-			result.add(oql.proxies.CSVDownload.initialize(context, obj));
-		return result;
+		return com.mendix.core.Core.createXPathQuery(String.format("//%1$s%2$s", entityName, xpathConstraint))
+			.execute(context)
+			.stream()
+			.map(obj -> oql.proxies.CSVDownload.initialize(context, obj))
+			.collect(java.util.stream.Collectors.toList());
 	}
 
 	@java.lang.Override
 	public boolean equals(Object obj)
 	{
-		if (obj == this)
+		if (obj == this) {
 			return true;
-
+		}
 		if (obj != null && getClass().equals(obj.getClass()))
 		{
 			final oql.proxies.CSVDownload that = (oql.proxies.CSVDownload) obj;
@@ -106,7 +111,7 @@ public class CSVDownload extends system.proxies.FileDocument
 	 */
 	public static java.lang.String getType()
 	{
-		return "OQL.CSVDownload";
+		return entityName;
 	}
 
 	/**

@@ -24,7 +24,7 @@ public class Query
 		CSV("CSV"),
 		ShowAs("ShowAs");
 
-		private java.lang.String metaName;
+		private final java.lang.String metaName;
 
 		MemberNames(java.lang.String s)
 		{
@@ -40,15 +40,17 @@ public class Query
 
 	public Query(com.mendix.systemwideinterfaces.core.IContext context)
 	{
-		this(context, com.mendix.core.Core.instantiate(context, "OQL.Query"));
+		this(context, com.mendix.core.Core.instantiate(context, entityName));
 	}
 
 	protected Query(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject queryMendixObject)
 	{
-		if (queryMendixObject == null)
+		if (queryMendixObject == null) {
 			throw new java.lang.IllegalArgumentException("The given object cannot be null.");
-		if (!com.mendix.core.Core.isSubClassOf("OQL.Query", queryMendixObject.getType()))
-			throw new java.lang.IllegalArgumentException("The given object is not a OQL.Query");
+		}
+		if (!com.mendix.core.Core.isSubClassOf(entityName, queryMendixObject.getType())) {
+			throw new java.lang.IllegalArgumentException(String.format("The given object is not a %s", entityName));
+		}	
 
 		this.queryMendixObject = queryMendixObject;
 		this.context = context;
@@ -66,6 +68,9 @@ public class Query
 	/**
 	 * Initialize a proxy using context (recommended). This context will be used for security checking when the get- and set-methods without context parameters are called.
 	 * The get- and set-methods with context parameter should be used when for instance sudo access is necessary (IContext.createSudoClone() can be used to obtain sudo access).
+	 * @param context The context to be used
+	 * @param mendixObject The Mendix object for the new instance
+	 * @return a new instance of this proxy class
 	 */
 	public static oql.proxies.Query initialize(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject mendixObject)
 	{
@@ -80,6 +85,7 @@ public class Query
 
 	/**
 	 * Commit the changes made on this proxy object.
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final void commit() throws com.mendix.core.CoreException
 	{
@@ -88,6 +94,7 @@ public class Query
 
 	/**
 	 * Commit the changes made on this proxy object using the specified context.
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final void commit(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
@@ -197,9 +204,9 @@ public class Query
 	public final oql.proxies.ShowAs getShowAs(com.mendix.systemwideinterfaces.core.IContext context)
 	{
 		Object obj = getMendixObject().getValue(context, MemberNames.ShowAs.toString());
-		if (obj == null)
+		if (obj == null) {
 			return null;
-
+		}
 		return oql.proxies.ShowAs.valueOf((java.lang.String) obj);
 	}
 
@@ -219,10 +226,11 @@ public class Query
 	 */
 	public final void setShowAs(com.mendix.systemwideinterfaces.core.IContext context, oql.proxies.ShowAs showas)
 	{
-		if (showas != null)
+		if (showas != null) {
 			getMendixObject().setValue(context, MemberNames.ShowAs.toString(), showas.toString());
-		else
+		} else {
 			getMendixObject().setValue(context, MemberNames.ShowAs.toString(), null);
+		}
 	}
 
 	/**
@@ -244,9 +252,9 @@ public class Query
 	@java.lang.Override
 	public boolean equals(Object obj)
 	{
-		if (obj == this)
+		if (obj == this) {
 			return true;
-
+		}
 		if (obj != null && getClass().equals(obj.getClass()))
 		{
 			final oql.proxies.Query that = (oql.proxies.Query) obj;
@@ -266,7 +274,7 @@ public class Query
 	 */
 	public static java.lang.String getType()
 	{
-		return "OQL.Query";
+		return entityName;
 	}
 
 	/**

@@ -31,7 +31,7 @@ public class ExamplePersonResult
 		ExamplePersonResult_ExamplePerson("OQL.ExamplePersonResult_ExamplePerson"),
 		Result_MarriedTo("OQL.Result_MarriedTo");
 
-		private java.lang.String metaName;
+		private final java.lang.String metaName;
 
 		MemberNames(java.lang.String s)
 		{
@@ -47,15 +47,17 @@ public class ExamplePersonResult
 
 	public ExamplePersonResult(com.mendix.systemwideinterfaces.core.IContext context)
 	{
-		this(context, com.mendix.core.Core.instantiate(context, "OQL.ExamplePersonResult"));
+		this(context, com.mendix.core.Core.instantiate(context, entityName));
 	}
 
 	protected ExamplePersonResult(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject examplePersonResultMendixObject)
 	{
-		if (examplePersonResultMendixObject == null)
+		if (examplePersonResultMendixObject == null) {
 			throw new java.lang.IllegalArgumentException("The given object cannot be null.");
-		if (!com.mendix.core.Core.isSubClassOf("OQL.ExamplePersonResult", examplePersonResultMendixObject.getType()))
-			throw new java.lang.IllegalArgumentException("The given object is not a OQL.ExamplePersonResult");
+		}
+		if (!com.mendix.core.Core.isSubClassOf(entityName, examplePersonResultMendixObject.getType())) {
+			throw new java.lang.IllegalArgumentException(String.format("The given object is not a %s", entityName));
+		}	
 
 		this.examplePersonResultMendixObject = examplePersonResultMendixObject;
 		this.context = context;
@@ -73,6 +75,9 @@ public class ExamplePersonResult
 	/**
 	 * Initialize a proxy using context (recommended). This context will be used for security checking when the get- and set-methods without context parameters are called.
 	 * The get- and set-methods with context parameter should be used when for instance sudo access is necessary (IContext.createSudoClone() can be used to obtain sudo access).
+	 * @param context The context to be used
+	 * @param mendixObject The Mendix object for the new instance
+	 * @return a new instance of this proxy class
 	 */
 	public static oql.proxies.ExamplePersonResult initialize(com.mendix.systemwideinterfaces.core.IContext context, com.mendix.systemwideinterfaces.core.IMendixObject mendixObject)
 	{
@@ -87,6 +92,7 @@ public class ExamplePersonResult
 
 	/**
 	 * Commit the changes made on this proxy object.
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final void commit() throws com.mendix.core.CoreException
 	{
@@ -95,6 +101,7 @@ public class ExamplePersonResult
 
 	/**
 	 * Commit the changes made on this proxy object using the specified context.
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final void commit(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
@@ -384,9 +391,9 @@ public class ExamplePersonResult
 	public final oql.proxies.Gender getGender(com.mendix.systemwideinterfaces.core.IContext context)
 	{
 		Object obj = getMendixObject().getValue(context, MemberNames.Gender.toString());
-		if (obj == null)
+		if (obj == null) {
 			return null;
-
+		}
 		return oql.proxies.Gender.valueOf((java.lang.String) obj);
 	}
 
@@ -406,13 +413,15 @@ public class ExamplePersonResult
 	 */
 	public final void setGender(com.mendix.systemwideinterfaces.core.IContext context, oql.proxies.Gender gender)
 	{
-		if (gender != null)
+		if (gender != null) {
 			getMendixObject().setValue(context, MemberNames.Gender.toString(), gender.toString());
-		else
+		} else {
 			getMendixObject().setValue(context, MemberNames.Gender.toString(), null);
+		}
 	}
 
 	/**
+	 * @throws com.mendix.core.CoreException
 	 * @return value of ExamplePersonResult_ExamplePerson
 	 */
 	public final oql.proxies.ExamplePerson getExamplePersonResult_ExamplePerson() throws com.mendix.core.CoreException
@@ -423,13 +432,15 @@ public class ExamplePersonResult
 	/**
 	 * @param context
 	 * @return value of ExamplePersonResult_ExamplePerson
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final oql.proxies.ExamplePerson getExamplePersonResult_ExamplePerson(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
 		oql.proxies.ExamplePerson result = null;
 		com.mendix.systemwideinterfaces.core.IMendixIdentifier identifier = getMendixObject().getValue(context, MemberNames.ExamplePersonResult_ExamplePerson.toString());
-		if (identifier != null)
+		if (identifier != null) {
 			result = oql.proxies.ExamplePerson.load(context, identifier);
+		}
 		return result;
 	}
 
@@ -449,13 +460,15 @@ public class ExamplePersonResult
 	 */
 	public final void setExamplePersonResult_ExamplePerson(com.mendix.systemwideinterfaces.core.IContext context, oql.proxies.ExamplePerson examplepersonresult_exampleperson)
 	{
-		if (examplepersonresult_exampleperson == null)
+		if (examplepersonresult_exampleperson == null) {
 			getMendixObject().setValue(context, MemberNames.ExamplePersonResult_ExamplePerson.toString(), null);
-		else
+		} else {
 			getMendixObject().setValue(context, MemberNames.ExamplePersonResult_ExamplePerson.toString(), examplepersonresult_exampleperson.getMendixObject().getId());
+		}
 	}
 
 	/**
+	 * @throws com.mendix.core.CoreException
 	 * @return value of Result_MarriedTo
 	 */
 	public final oql.proxies.ExamplePerson getResult_MarriedTo() throws com.mendix.core.CoreException
@@ -466,13 +479,15 @@ public class ExamplePersonResult
 	/**
 	 * @param context
 	 * @return value of Result_MarriedTo
+	 * @throws com.mendix.core.CoreException
 	 */
 	public final oql.proxies.ExamplePerson getResult_MarriedTo(com.mendix.systemwideinterfaces.core.IContext context) throws com.mendix.core.CoreException
 	{
 		oql.proxies.ExamplePerson result = null;
 		com.mendix.systemwideinterfaces.core.IMendixIdentifier identifier = getMendixObject().getValue(context, MemberNames.Result_MarriedTo.toString());
-		if (identifier != null)
+		if (identifier != null) {
 			result = oql.proxies.ExamplePerson.load(context, identifier);
+		}
 		return result;
 	}
 
@@ -492,10 +507,11 @@ public class ExamplePersonResult
 	 */
 	public final void setResult_MarriedTo(com.mendix.systemwideinterfaces.core.IContext context, oql.proxies.ExamplePerson result_marriedto)
 	{
-		if (result_marriedto == null)
+		if (result_marriedto == null) {
 			getMendixObject().setValue(context, MemberNames.Result_MarriedTo.toString(), null);
-		else
+		} else {
 			getMendixObject().setValue(context, MemberNames.Result_MarriedTo.toString(), result_marriedto.getMendixObject().getId());
+		}
 	}
 
 	/**
@@ -517,9 +533,9 @@ public class ExamplePersonResult
 	@java.lang.Override
 	public boolean equals(Object obj)
 	{
-		if (obj == this)
+		if (obj == this) {
 			return true;
-
+		}
 		if (obj != null && getClass().equals(obj.getClass()))
 		{
 			final oql.proxies.ExamplePersonResult that = (oql.proxies.ExamplePersonResult) obj;
@@ -539,7 +555,7 @@ public class ExamplePersonResult
 	 */
 	public static java.lang.String getType()
 	{
-		return "OQL.ExamplePersonResult";
+		return entityName;
 	}
 
 	/**
