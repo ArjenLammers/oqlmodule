@@ -98,7 +98,7 @@ public class ExportOQLToCSV extends CustomJavaAction<IMendixObject>
 			
 			
 			IContext context = getContext().createSudoClone();
-			IDataTable results = Core.retrieveOQLDataTable(context, buildRequest(offset, PAGE_SIZE));
+			IDataTable results = Core.retrieveOQLDataTable(context, buildRequest(statement, offset, PAGE_SIZE));
 
 			IDataTableSchema tableSchema = results.getSchema();
 			
@@ -145,7 +145,6 @@ public class ExportOQLToCSV extends CustomJavaAction<IMendixObject>
 		Core.storeFileDocumentContent(getContext(), result, new FileInputStream(tmpFile));
 		tmpFile.delete();
 		OQL.resetParameters();
-		
 		return result;
 		// END USER CODE
 	}
@@ -161,9 +160,15 @@ public class ExportOQLToCSV extends CustomJavaAction<IMendixObject>
 	}
 
 	// BEGIN EXTRA CODE
-	private IOQLTextGetRequest buildRequest(int offset, int pagesize) {
-		IOQLTextGetRequest request = Core.createOQLTextGetRequest();
-		request.setQuery(statement);
+	private IOQLTextGetRequest buildRequest(String statement, int offset, int pagesize) {
+		IOQLTextGetRequest request;
+		try {
+			request = Core.createOQLTextGetRequestFromDataSet(statement); 
+		} catch (IllegalArgumentException e) {
+			request = Core.createOQLTextGetRequest();
+			request.setQuery(statement);
+		}
+		
 		IParameterMap parameterMap = request.createParameterMap();
 		IRetrievalSchema schema = Core.createRetrievalSchema();
 		schema.setAmount(pagesize);

@@ -66,8 +66,14 @@ public class OQL {
 	
 	public static List<IMendixObject> executeOQL(IContext context, String statement, String returnEntity, 
 			Long amount, Long offset, Map<String, Object> parameters) throws CoreException {
-		IOQLTextGetRequest request = Core.createOQLTextGetRequest();
-		request.setQuery(statement);
+		IOQLTextGetRequest request;
+		try {
+			request = Core.createOQLTextGetRequestFromDataSet(statement); 
+		} catch (IllegalArgumentException e) {
+			request = Core.createOQLTextGetRequest();
+			request.setQuery(statement);
+		}
+		
 		IParameterMap parameterMap = request.createParameterMap();
 		for (Entry<String, Object> entry : OQL.getNextParameters().entrySet()) {
 			parameterMap.put(entry.getKey(), entry.getValue());

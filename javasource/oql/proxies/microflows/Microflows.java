@@ -27,10 +27,22 @@ public class Microflows
 		params.put("Query", _query == null ? null : _query.getMendixObject());
 		Core.microflowCall("OQL.ACT_ExecuteOQL").withParams(params).execute(context);
 	}
-	public static java.util.List<oql.proxies.ExamplePersonResult> dS_ExampleOQL(IContext context)
+	public static java.util.List<oql.proxies.ExamplePersonResult> dS_ExampleOQL_DataSet(IContext context)
 	{
 		Map<java.lang.String, Object> params = new HashMap<>();
-		java.util.List<IMendixObject> objs = Core.microflowCall("OQL.DS_ExampleOQL").withParams(params).execute(context);
+		java.util.List<IMendixObject> objs = Core.microflowCall("OQL.DS_ExampleOQL_DataSet").withParams(params).execute(context);
+		if (objs == null) {
+			return null;
+		} else {
+			return objs.stream()
+				.map(obj -> oql.proxies.ExamplePersonResult.initialize(context, obj))
+				.collect(java.util.stream.Collectors.toList());
+		}
+	}
+	public static java.util.List<oql.proxies.ExamplePersonResult> dS_ExampleOQL_Statement(IContext context)
+	{
+		Map<java.lang.String, Object> params = new HashMap<>();
+		java.util.List<IMendixObject> objs = Core.microflowCall("OQL.DS_ExampleOQL_Statement").withParams(params).execute(context);
 		if (objs == null) {
 			return null;
 		} else {
