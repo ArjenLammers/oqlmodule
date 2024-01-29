@@ -112,9 +112,7 @@ public class UserActionsRegistrar
     registrator.registerUserAction(oql.actions.CountRowsOQLStatement.class);
     registrator.registerUserAction(oql.actions.ExecuteOQLStatement.class);
     registrator.registerUserAction(oql.actions.ExportOQLToCSV.class);
-    registrator.registerUserAction(oqladdon.actions.AddListParameter.class);
-    registrator.registerUserAction(oqladdon.actions.executeOQLDataSet.class);
-    registrator.registerUserAction(oqladdon.actions.executeOQLStatement.class);
+    registrator.registerUserAction(oqlexample.actions.StringTemplateTest.class);
     registrator.registerUserAction(system.actions.VerifyPassword.class);
   }
 }
