@@ -25,7 +25,6 @@
 	<classpathentry kind="lib" path="userlib/jsr305-3.0.2.jar"/>
 	<classpathentry kind="lib" path="userlib/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar"/>
 	<classpathentry kind="lib" path="userlib/opencsv-5.7.1.jar"/>
-	<classpathentry kind="lib" path="userlib/org.apache.commons.lang3.jar"/>
 	<classpathentry kind="lib" path="userlib/owasp-java-html-sanitizer-20211018.2.jar"/>
 	<classpathentry kind="lib" path="userlib/pdfbox-2.0.24.jar"/>
 	<classpathentry kind="output" path="deployment/run/bin"/>
