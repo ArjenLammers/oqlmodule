@@ -20,6 +20,21 @@ public class Microflows
 	public Microflows() {}
 
 	// These are the microflows for the OQLExample module
+	public static void aCT_GenerateOQLExport(IContext context)
+	{
+		Map<java.lang.String, Object> params = new HashMap<>();
+		Core.microflowCall("OQLExample.ACT_GenerateOQLExport").withParams(params).execute(context);
+	}
+	public static void aCT_GenerateTestData(IContext context)
+	{
+		Map<java.lang.String, Object> params = new HashMap<>();
+		Core.microflowCall("OQLExample.ACT_GenerateTestData").withParams(params).execute(context);
+	}
+	public static void aCT_OpenOQLOverview(IContext context)
+	{
+		Map<java.lang.String, Object> params = new HashMap<>();
+		Core.microflowCall("OQLExample.ACT_OpenOQLOverview").withParams(params).execute(context);
+	}
 	public static void stringTemplateTest(IContext context)
 	{
 		Map<java.lang.String, Object> params = new HashMap<>();

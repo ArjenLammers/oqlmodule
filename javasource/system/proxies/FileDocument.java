@@ -84,6 +84,9 @@ public class FileDocument
 		if (com.mendix.core.Core.isSubClassOf("OQL.CSVDownload", mendixObject.getType())) {
 			return oql.proxies.CSVDownload.initialize(context, mendixObject);
 		}
+		if (com.mendix.core.Core.isSubClassOf("OQLExample.ExampleResult", mendixObject.getType())) {
+			return oqlexample.proxies.ExampleResult.initialize(context, mendixObject);
+		}
 		if (com.mendix.core.Core.isSubClassOf("System.Image", mendixObject.getType())) {
 			return system.proxies.Image.initialize(context, mendixObject);
 		}
